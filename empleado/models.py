@@ -14,4 +14,4 @@ class Empleado(models.Model):
     class Meta:
         db_table = 'Empleados'
         verbose_name = 'Empleado'
-        verbose_name_plural = 'Empleadpos'
+        verbose_name_plural = 'Empleados'

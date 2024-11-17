@@ -6,7 +6,7 @@ class Sucursal (models.Model):
     direccion = models.CharField(max_length=60, unique=True)
    
     def __str__(self):
-        return f"Sucursal {self.nombre} Direccion: {self.direccion}"
+        return f"{self.nombre}"
 
     class Meta:
         db_table = 'Sucursales'
