@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.views.generic.detail import DetailView
+from .models import Cliente
 
-# Create your views here.
+
+class ClienteDetailView(DetailView):
+    model = Cliente
+    template_name = 'clientes/cliente_detail.html'
+    context_object_name = 'cliente'

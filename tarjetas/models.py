@@ -10,7 +10,7 @@ class Tarjeta(models.Model):
 
 
     def __str__(self):
-        return f"Tarjeta {self.numero_tarjeta} -{self.tipo_tarjeta}- {self.cliente}"
+        return f"Tarjeta de {self.tipo_tarjeta} - {self.cliente}"
 
     class Meta:
         db_table = 'Tarjetas'
