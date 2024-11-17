@@ -1,8 +1,9 @@
 from django.views.generic.edit import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Cuenta
 from django.urls import reverse_lazy
 
-class CuentaCreateView(CreateView):
+class CuentaCreateView(LoginRequiredMixin, CreateView):
     model = Cuenta
     fields = ['cliente', 'tipo_cuenta',]
     template_name = 'cuentas/cuenta_form.html'

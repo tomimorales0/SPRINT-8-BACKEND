@@ -109,9 +109,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LOGIN_REDIRECT_URL = '/'  # Redirige tras iniciar sesión
 
-LOGOUT_REDIRECT_URL = '/'  # Redirige tras cerrar sesión
+LOGOUT_REDIRECT_URL = '/cuentas/login/' # Redirige tras cerrar sesión
 
-LOGIN_URL = '/accounts/login/'  # URL para iniciar sesión
+LOGIN_URL = '/cuentas/login/'  # URL para iniciar sesión
 
 
 
