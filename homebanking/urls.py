@@ -18,11 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import views as auth_views
+from prestamos import views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('cuentas/', include('django.contrib.auth.urls')),  
+    path('solicitar/', views.solicitar_prestamo, name='solicitar_prestamo'),
     path('clientes/', include('clientes.urls')),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Solicitud de Préstamo</h2>
+<form method="post" id="prestamo-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Solicitar</button>
+</form>
+
+<div id="message"></div>
+
+<script>
+document.getElementById('prestamo-form').onsubmit = function(event) {
+    event.preventDefault();
+    const formData = new FormData(this);
+    fetch("{% url 'solicitar_prestamo' %}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const messageDiv = document.getElementById('message');
+        if (data.status === 'success') {
+            messageDiv.textContent = data.message;
+            messageDiv.style.color = 'green';
+        } else {
+            messageDiv.textContent = JSON.stringify(data.errors);
+            messageDiv.style.color = 'red';
+        }
+    });
+};
+</script>
+{% endblock %}

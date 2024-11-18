@@ -1,17 +1,25 @@
 from django.db import models
-from clientes.models import Cliente
+from django.contrib.auth.models import User
+
+class Cliente(models.Model):
+    USER_TYPES = [
+        ('BLACK', 'Black'),
+        ('GOLD', 'Gold'),
+        ('CLASSIC', 'Classic'),
+    ]
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=10, choices=USER_TYPES)
+    saldo = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.tipo}"
 
 class Prestamo(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    tipo_prestamo = models.CharField(max_length=100, null=False, default= 'Classic')
+    fecha_inicio = models.DateField()
     monto = models.DecimalField(max_digits=10, decimal_places=2)
-    tasa_interes = models.DecimalField(max_digits=5, decimal_places=2)
-    plazo = models.PositiveIntegerField(help_text="Plazo en meses")
-    fecha_inicio = models.DateField(auto_now_add=True)
+    aprobado = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Préstamo de {self.monto} para {self.cliente}"
-
-    class Meta:
-        db_table = 'Prestamos'
-        verbose_name = 'Prestamo'
-        verbose_name_plural = 'Prestamos'
+        return f"Préstamo de {self.cliente.user.username} - {self.monto}"
