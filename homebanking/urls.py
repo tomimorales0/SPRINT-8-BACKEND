@@ -28,6 +28,7 @@ urlpatterns = [
     path('clientes/', include('clientes.urls')),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('api/', include('api.urls')),
 ]
 
 #/login/: Página de inicio de sesión.

@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'prestamos.apps.PrestamosConfig',
     'sucursal.apps.SucursalConfig',
     'tarjetas.apps.TarjetasConfig',
+    'api',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -114,7 +116,6 @@ LOGOUT_REDIRECT_URL = '/cuentas/login/' # Redirige tras cerrar sesión
 LOGIN_URL = '/cuentas/login/'  # URL para iniciar sesión
 
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -136,3 +137,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Django Rest Framework Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',  # Opcional para autenticación en navegadores
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
