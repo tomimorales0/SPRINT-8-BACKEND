@@ -10,6 +10,7 @@ class Cliente(models.Model):
         ('GOLD', 'Gold'),
         ('CLASSIC', 'Classic'),
     ]
+    
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=80)
     apellido = models.CharField(max_length=80)

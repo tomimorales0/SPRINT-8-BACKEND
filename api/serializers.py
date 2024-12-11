@@ -3,6 +3,7 @@ from clientes.models import Cliente
 from cuentas.models import Cuenta
 from prestamos.models import Prestamo
 from tarjetas.models import Tarjeta
+from sucursal.models import Sucursal
 from django.contrib.auth.models import User
 
 
@@ -24,19 +25,24 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente
-        fields = '__all__'
+        fields = ['id', 'nombre', 'apellido', 'DNI', 'tipo', 'sucursal']
 
 class CuentaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cuenta
-        fields = '__all__'
+        fields = ['numero_cuenta', 'tipo', 'saldo']
 
 class PrestamoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prestamo
-        fields = '__all__'
+        fields = ['tipo_prestamo', 'fecha_inicio', 'monto', 'aprobado']
 
 class TarjetaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tarjeta
-        fields = '__all__'
+        fields = ['numero_tarjeta', 'tipo_tarjeta', 'fecha_expiracion']
+
+class SucursalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sucursal
+        fields = ['nombre', 'direccion']

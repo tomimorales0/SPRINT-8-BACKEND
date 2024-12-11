@@ -1,6 +1,7 @@
 from django.db import models
 from sucursal.models import Sucursal
 
+
 class Empleado(models.Model):
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
     nombre= models.CharField(max_length=20, unique=True)
