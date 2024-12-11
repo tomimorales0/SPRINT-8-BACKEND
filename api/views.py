@@ -5,6 +5,21 @@ from cuentas.models import Cuenta
 from prestamos.models import Prestamo
 from tarjetas.models import Tarjeta
 from .serializers import ClienteSerializer, CuentaSerializer, PrestamoSerializer, TarjetaSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import User
+from .serializers import UserRegistrationSerializer
+
+class UserRegistrationView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = UserRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+             # Guardamos el usuario si los datos son válidos
+            serializer.save()
+            return Response({"message": "Usuario registrado exitosamente"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ClienteViewSet(ModelViewSet):
     queryset = Cliente.objects.all()
