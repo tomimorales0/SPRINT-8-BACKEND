@@ -9,6 +9,8 @@ from .serializers import ClienteSerializer, CuentaSerializer, PrestamoSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
+from rest_framework.authentication import BasicAuthentication
 from django.contrib.auth.models import User
 from .serializers import UserRegistrationSerializer, MovimientoSerializer
 from rest_framework.views import APIView
@@ -49,6 +51,7 @@ class ObtenerMovimientosPorCuentaView(APIView):
 
 # Obtener datos de un cliente
 class ObtenerDatosClienteView(APIView):
+    authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
@@ -62,7 +65,10 @@ class ObtenerDatosClienteView(APIView):
 
 # Obtener saldo de cuenta de un cliente
 class ObtenerSaldoCuentaView(APIView):
+    
+    authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
+
 
     def get(self, request, *args, **kwargs):
         # Verificar que no sea superusuario/empleado
@@ -76,6 +82,7 @@ class ObtenerSaldoCuentaView(APIView):
 
 # Obtener monto de préstamos de un cliente
 class ObtenerPrestamosClienteView(APIView):
+    authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
@@ -90,6 +97,7 @@ class ObtenerPrestamosClienteView(APIView):
 
 # Obtener monto de préstamos de una sucursal (solo para empleados/superusuarios)
 class ObtenerPrestamosSucursalView(APIView):
+    authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
@@ -104,6 +112,7 @@ class ObtenerPrestamosSucursalView(APIView):
 
 # Obtener tarjetas asociadas a un cliente (solo para empleados)
 class ObtenerTarjetasClienteView(APIView):
+    authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
@@ -118,6 +127,7 @@ class ObtenerTarjetasClienteView(APIView):
 
 # Generar una solicitud de préstamo para un cliente (solo para empleados)
 class GenerarSolicitudPrestamoView(APIView):
+    authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
@@ -135,6 +145,7 @@ class GenerarSolicitudPrestamoView(APIView):
 
 # Anular solicitud de préstamo de un cliente (solo para empleados)
 class AnularSolicitudPrestamoView(APIView):
+    authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
@@ -151,6 +162,7 @@ class AnularSolicitudPrestamoView(APIView):
 
 # Modificar dirección de un cliente (clientes y empleados pueden modificar)
 class ModificarDireccionClienteView(APIView):
+    authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]  # Solo usuarios autenticados
 
     def post(self, request, *args, **kwargs):
@@ -172,7 +184,8 @@ class ModificarDireccionClienteView(APIView):
 
 # Listado de todas las sucursales (endpoint público)
 class ListarSucursalesView(APIView):
-    permission_classes = [IsAuthenticated]
+    authentication_classes = []  # Desactiva autenticación para esta vista
+    permission_classes = [AllowAny]  # Permite acceso a cualquier usuario
 
     def get(self, request, *args, **kwargs):
         sucursales = Sucursal.objects.all()
