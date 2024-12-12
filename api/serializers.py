@@ -37,7 +37,7 @@ class ClienteSerializer(serializers.ModelSerializer):
 class CuentaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cuenta
-        fields = ['numero_cuenta', 'tipo', 'saldo']
+        fields = ['numero_cuenta', 'tipo', 'saldo', 'cliente']
 
 class PrestamoSerializer(serializers.ModelSerializer):
     class Meta:
