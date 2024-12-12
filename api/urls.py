@@ -10,7 +10,7 @@ from .views import (
     ModificarDireccionClienteView,
     ListarSucursalesView,
     UserRegistrationView,
-    ObtenerMovimientosTestView
+    ObtenerMovimientosPorCuentaView
 )
 
 urlpatterns = [
@@ -24,5 +24,5 @@ urlpatterns = [
     path('cliente/modificar_direccion/', ModificarDireccionClienteView.as_view(), name='modificar_direccion_cliente'),
     path('sucursales/', ListarSucursalesView.as_view(), name='listar_sucursales'),
     path('register/', UserRegistrationView.as_view(), name='user-register'),
-    path('movimientos-test/', ObtenerMovimientosTestView.as_view(), name='obtener-movimientos-test'),
+    path('movimientos-por-cuenta/', ObtenerMovimientosPorCuentaView.as_view(), name='obtener-movimientos-por-cuenta'),
 ]

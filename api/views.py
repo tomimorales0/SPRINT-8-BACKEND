@@ -25,10 +25,24 @@ class UserRegistrationView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ObtenerMovimientosTestView(APIView):
+class ObtenerMovimientosPorCuentaView(APIView):
     def get(self, request, *args, **kwargs):
-        # Obtener todos los movimientos de la base de datos
-        movimientos = Movimiento.objects.all().order_by('-fecha')
+        # Obtener el ID de la cuenta desde los parámetros de la URL
+        cuenta_id = request.query_params.get('cuenta_id')
+        if not cuenta_id:
+            return Response(
+                {"error": "Se requiere el parámetro 'cuenta_id'."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Filtrar movimientos por la cuenta
+        movimientos = Movimiento.objects.filter(cuenta_id=cuenta_id).order_by('-fecha')
+        if not movimientos.exists():
+            return Response(
+                {"mensaje": "No hay movimientos para la cuenta especificada."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
         serializer = MovimientoSerializer(movimientos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
