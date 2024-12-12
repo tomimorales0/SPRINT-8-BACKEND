@@ -4,6 +4,7 @@ from clientes.models import Cliente
 from cuentas.models import Cuenta
 from prestamos.models import Prestamo
 from tarjetas.models import Tarjeta
+from sucursal.models import Sucursal
 from .serializers import ClienteSerializer, CuentaSerializer, PrestamoSerializer, TarjetaSerializer, SucursalSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
