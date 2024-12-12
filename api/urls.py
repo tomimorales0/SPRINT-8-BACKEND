@@ -10,7 +10,8 @@ from .views import (
     ModificarDireccionClienteView,
     ListarSucursalesView,
     UserRegistrationView,
-    ObtenerMovimientosPorCuentaView
+    ObtenerMovimientosPorCuentaView,
+    VerifyLoginView
 )
 
 urlpatterns = [
@@ -25,4 +26,5 @@ urlpatterns = [
     path('sucursales/', ListarSucursalesView.as_view(), name='listar_sucursales'),
     path('register/', UserRegistrationView.as_view(), name='user-register'),
     path('movimientos-por-cuenta/', ObtenerMovimientosPorCuentaView.as_view(), name='obtener-movimientos-por-cuenta'),
+    path('verify-login/', VerifyLoginView.as_view(), name='verify-login'),
 ]

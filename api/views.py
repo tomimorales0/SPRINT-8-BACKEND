@@ -17,6 +17,15 @@ from rest_framework.views import APIView
 from movimientos.models import Movimiento
 
 
+class VerifyLoginView(APIView):
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        return Response({'message': f'Bienvenido, {user.username}!'}, status=200)
+
+
 class UserRegistrationView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = UserRegistrationSerializer(data=request.data)
