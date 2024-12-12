@@ -10,8 +10,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
-from .serializers import UserRegistrationSerializer
+from .serializers import UserRegistrationSerializer, MovimientoSerializer
 from rest_framework.views import APIView
+from movimientos.models import Movimiento
 
 
 class UserRegistrationView(APIView):
@@ -22,6 +23,14 @@ class UserRegistrationView(APIView):
             serializer.save()
             return Response({"message": "Usuario registrado exitosamente"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ObtenerMovimientosTestView(APIView):
+    def get(self, request, *args, **kwargs):
+        # Obtener todos los movimientos de la base de datos
+        movimientos = Movimiento.objects.all().order_by('-fecha')
+        serializer = MovimientoSerializer(movimientos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # Obtener datos de un cliente

@@ -5,7 +5,7 @@ from prestamos.models import Prestamo
 from tarjetas.models import Tarjeta
 from sucursal.models import Sucursal
 from django.contrib.auth.models import User
-
+from movimientos.models import Movimiento
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -21,6 +21,13 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         )
         return user
     
+
+
+class MovimientoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movimiento
+        fields = ['id', 'cuenta', 'fecha', 'tipo_movimiento', 'monto']
+
 
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
