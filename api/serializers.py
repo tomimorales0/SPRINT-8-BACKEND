@@ -21,7 +21,23 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         )
         return user
     
+class TransferenciaSerializer(serializers.Serializer):
+    destinatario_id = serializers.IntegerField()
+    monto = serializers.DecimalField(max_digits=10, decimal_places=2)
 
+    def validate(self, data):
+        # Validaciones adicionales si es necesario
+        if data['monto'] <= 0:
+            raise serializers.ValidationError("El monto debe ser positivo.")
+        return data
+
+    def validate_destinatario_id(self, value):
+        try:
+            # Validamos que el destinatario exista
+            destinatario = Cliente.objects.get(id=value)
+        except Cliente.DoesNotExist:
+            raise serializers.ValidationError("Destinatario no encontrado.")
+        return destinatario
 
 class MovimientoSerializer(serializers.ModelSerializer):
     # Mostrar el nombre de la cuenta

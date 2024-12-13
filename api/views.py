@@ -12,13 +12,72 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.authentication import BasicAuthentication
 from django.contrib.auth.models import User
-from .serializers import UserRegistrationSerializer, MovimientoSerializer
+from .serializers import UserRegistrationSerializer, MovimientoSerializer, TransferenciaSerializer
 from rest_framework.views import APIView
 from movimientos.models import Movimiento
 import uuid
+from django.db import transaction
+
+
+class TransferenciaAPIView(APIView):
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # Obtener el cliente autenticado
+        cliente_origen = Cliente.objects.get(user=request.user)  # Obtiene el cliente basado en el usuario autenticado
+        cuenta_origen = Cuenta.objects.get(cliente=cliente_origen)
+
+        # Deserializar los datos de la transferencia
+        serializer = TransferenciaSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                # Obtener los datos validados
+                destinatario_cliente = serializer.validated_data['destinatario_id']
+                monto = serializer.validated_data['monto']
+
+                # Verificar si el destinatario existe
+                destinatario = Cliente.objects.get(id=destinatario_cliente.id)
+                cuenta_destino = Cuenta.objects.get(cliente=destinatario)
+
+                # Verificar que la cuenta de origen tenga suficiente saldo
+                if cuenta_origen.saldo < monto:
+                    return Response({'error': 'Saldo insuficiente'}, status=status.HTTP_400_BAD_REQUEST)
+
+                # Iniciar transacción para asegurar que la transferencia sea atómica
+                with transaction.atomic():
+                    # Realizar la transferencia
+                    cuenta_origen.saldo -= monto
+                    cuenta_destino.saldo += monto
+                    cuenta_origen.save()
+                    cuenta_destino.save()
+
+                    # Crear los movimientos
+                    Movimiento.objects.create(
+                        cuenta=cuenta_origen,
+                        tipo_movimiento='Salida',
+                        monto=monto,
+                        destinatario=destinatario
+                    )
+                    Movimiento.objects.create(
+                        cuenta=cuenta_origen,
+                        tipo_movimiento='Entrada',
+                        monto=monto,
+                        destinatario=destinatario
+                    )
+
+                return Response({'message': 'Transferencia realizada con éxito'}, status=status.HTTP_200_OK)
+
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 TOKENS = {}
-
+#generador de tokens
 class GenerateTokenView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -28,7 +87,8 @@ class GenerateTokenView(APIView):
         token = str(uuid.uuid4())  # Generar un token único
         TOKENS[user.username] = token  # Guardar el token asociado al usuario
         return Response({'token': token}, status=200)
-
+    
+#verificador de basic auth
 class VerifyLoginView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -47,7 +107,7 @@ class UserRegistrationView(APIView):
             return Response({"message": "Usuario registrado exitosamente"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+#Movimientos por cuentas
 class ObtenerMovimientosPorCuentaView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
