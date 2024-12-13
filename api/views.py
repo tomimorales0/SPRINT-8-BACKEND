@@ -19,6 +19,44 @@ import uuid
 from django.db import transaction
 
 
+
+class ClienteAccountTypeView(APIView):
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        cliente = request.user.cliente  # Obtener el cliente autenticado
+        return Response({"account_type": cliente.tipo})  # Retornar el tipo de cuenta
+
+
+class PrestamoCreateView(APIView):
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # Obtener el ID del cliente desde los datos enviados
+        client_id = request.data.get('cliente')
+
+        if not client_id:
+            return Response({"error": "No se proporcionó el ID del cliente"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Verificar si el cliente existe
+        try:
+            cliente = Cliente.objects.get(id=client_id)
+        except Cliente.DoesNotExist:
+            return Response({"error": "Cliente no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Asignar cliente al préstamo
+        data = request.data
+        data['cliente'] = cliente.id  # Asegurarse de que el cliente esté asociado al préstamo
+
+        serializer = PrestamoSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class TransferenciaAPIView(APIView):
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]

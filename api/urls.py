@@ -13,7 +13,9 @@ from .views import (
     ObtenerMovimientosPorCuentaView,
     VerifyLoginView,
     GenerateTokenView,
-    TransferenciaAPIView
+    TransferenciaAPIView,
+    PrestamoCreateView,
+    ClienteAccountTypeView
 )
 
 urlpatterns = [
@@ -31,4 +33,6 @@ urlpatterns = [
     path('verify-login/', VerifyLoginView.as_view(), name='verify-login'),
     path('token/', GenerateTokenView.as_view(), name='generate-token'),
     path('transferir/', TransferenciaAPIView.as_view(), name='transferir'),
+    path("prestamos/", PrestamoCreateView.as_view(), name="crear-prestamo"),
+     path('cliente/account-type/', ClienteAccountTypeView.as_view(), name='cliente-account-type'),
 ]
