@@ -52,19 +52,14 @@ class TransferenciaAPIView(APIView):
                     cuenta_origen.save()
                     cuenta_destino.save()
 
-                    # Crear los movimientos
+                   
                     Movimiento.objects.create(
                         cuenta=cuenta_origen,
                         tipo_movimiento='Salida',
                         monto=monto,
                         destinatario=destinatario
                     )
-                    Movimiento.objects.create(
-                        cuenta=cuenta_origen,
-                        tipo_movimiento='Entrada',
-                        monto=monto,
-                        destinatario=destinatario
-                    )
+                    
 
                 return Response({'message': 'Transferencia realizada con éxito'}, status=status.HTTP_200_OK)
 
