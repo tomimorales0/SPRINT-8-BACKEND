@@ -11,7 +11,8 @@ from .views import (
     ListarSucursalesView,
     UserRegistrationView,
     ObtenerMovimientosPorCuentaView,
-    VerifyLoginView
+    VerifyLoginView,
+    GenerateTokenView
 )
 
 urlpatterns = [
@@ -27,4 +28,5 @@ urlpatterns = [
     path('register/', UserRegistrationView.as_view(), name='user-register'),
     path('movimientos/', ObtenerMovimientosPorCuentaView.as_view(), name='movimientos_por_cuenta'),
     path('verify-login/', VerifyLoginView.as_view(), name='verify-login'),
+    path('token/', GenerateTokenView.as_view(), name='generate-token'),
 ]

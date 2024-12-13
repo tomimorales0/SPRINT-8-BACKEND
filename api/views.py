@@ -15,7 +15,19 @@ from django.contrib.auth.models import User
 from .serializers import UserRegistrationSerializer, MovimientoSerializer
 from rest_framework.views import APIView
 from movimientos.models import Movimiento
+import uuid
 
+TOKENS = {}
+
+class GenerateTokenView(APIView):
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        token = str(uuid.uuid4())  # Generar un token único
+        TOKENS[user.username] = token  # Guardar el token asociado al usuario
+        return Response({'token': token}, status=200)
 
 class VerifyLoginView(APIView):
     authentication_classes = [BasicAuthentication]
