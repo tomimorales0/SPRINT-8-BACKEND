@@ -37,26 +37,30 @@ class UserRegistrationView(APIView):
 
 
 class ObtenerMovimientosPorCuentaView(APIView):
-    def get(self, request, *args, **kwargs):
-        # Obtener el ID de la cuenta desde los parámetros de la URL
-        cuenta_id = request.query_params.get('cuenta_id')
-        if not cuenta_id:
-            return Response(
-                {"error": "Se requiere el parámetro 'cuenta_id'."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
-        # Filtrar movimientos por la cuenta
-        movimientos = Movimiento.objects.filter(cuenta_id=cuenta_id).order_by('-fecha')
+    def get(self, request, *args, **kwargs):
+        # Verificar que no sea superusuario/empleado
+        if request.user.is_superuser:
+            return Response({"detail": "No tienes permisos para acceder a esta información."}, status=status.HTTP_403_FORBIDDEN)
+        # Obtener el cliente actual desde el usuario autenticado
+        cliente = Cliente.objects.get(user=request.user)  # Se obtiene el cliente basado en el usuario autenticado
+        # Obtener las cuentas asociadas al cliente
+        cuentas = cliente.cuenta_set.all()
+
+        # Obtener los movimientos para todas las cuentas del cliente
+        movimientos = Movimiento.objects.filter(cuenta__in=cuentas).order_by('-fecha')
+        
         if not movimientos.exists():
             return Response(
-                {"mensaje": "No hay movimientos para la cuenta especificada."},
+                {"mensaje": "No hay movimientos para las cuentas del cliente."},
                 status=status.HTTP_404_NOT_FOUND
             )
 
+        # Serializar los movimientos
         serializer = MovimientoSerializer(movimientos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 # Obtener datos de un cliente
 class ObtenerDatosClienteView(APIView):

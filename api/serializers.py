@@ -24,10 +24,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class MovimientoSerializer(serializers.ModelSerializer):
+    # Mostrar el nombre de la cuenta
+    cuenta = serializers.StringRelatedField()
+    # Mostrar el nombre del destinatario
+    destinatario = serializers.StringRelatedField(required=False)
+
     class Meta:
         model = Movimiento
-        fields = ['id', 'cuenta', 'fecha', 'tipo_movimiento', 'monto']
-
+        fields = ['cuenta', 'fecha', 'tipo_movimiento', 'monto', 'destinatario']
 
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
